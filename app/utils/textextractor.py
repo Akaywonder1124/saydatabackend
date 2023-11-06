@@ -15,6 +15,7 @@ def audio_extractor(video_file, audio_output_file):
 
 
 def mp3_to_wav(mp3_file, wav_file):
+    print(wav_file)
     try:
         audio = AudioSegment.from_mp3(mp3_file)
         audio.export(wav_file, format="wav")
@@ -65,18 +66,32 @@ def extract_and_recognize_text(file_path):
     elif file_extension == ".wav":
         return text_extractor(file_path)
 
-    elif file_extension == ".mp3":
-        temp_wav_file = file_name + "temp.wav"
-        mp3_to_wav(file_path, temp_wav_file)
-        print(temp_wav_file)
-        text_result = text_extractor(temp_wav_file)
-        return text_result
+    # elif file_extension == ".mp3":
+
+    #     # temp_wav_file = file_name + "temp.wav"
+    #     # try:
+    #     #     if not os.path.exists(file_path):
+    #     #         print(f"File not found at {file_path}")
+    #     #     mp3_to_wav(file_path, temp_wav_file)
+    #     #     text_result = text_extractor(temp_wav_file)
+    #     #     return text_result
+    #     # except Exception as e:
+    #     #     return {"mp3_conversion_error": str(e)}
 
     else:
-        return {"message": "Unsupported file format"}
+        return {"message": "Unsupported file format, try mp4 or wav"}
 
 
-def get_duration(audio_path):
-    audio = AudioSegment.from_file(audio_path)
-    duration = len(audio) / 1000
-    return duration
+def get_duration(file_path):
+    file_extension = file_path.split(".")[-1].lower()
+
+    if file_extension in ["mp3", "wav", "ogg", "flac"]:
+        audio = AudioSegment.from_file(file_path)
+        duration = len(audio) / 1000  # Convert milliseconds to seconds
+        return duration
+    elif file_extension in ["mp4", "avi", "mov", "mkv"]:
+        video = VideoFileClip(file_path)
+        duration = video.duration
+        return duration
+    else:
+        return None
