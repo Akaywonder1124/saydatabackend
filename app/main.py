@@ -6,7 +6,7 @@ from .routers import media
 app = FastAPI()
 
 # Define the list of allowed origins. "*" allows all origins; for production, specify the origin of your React app.
-origins = ["*"]
+origins = ["https://saydata-frontend-two.vercel.app/"]
 
 # Configure CORS to allow requests from specified origins
 app.add_middleware(
